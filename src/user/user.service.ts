@@ -1,18 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import mongoClient from '../mongo/MongoClient';
-import User from '../mongo/schema/User';
-import { ConfigService } from '@nestjs/config';
+// import mongoClient from '../mongo/MongoClient';
+import { User } from '../schema/User';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class UserService {
-  constructor(private configService: ConfigService) {
-    const connectionString = configService.get<string>('CONNECTION_STRING');
-    console.log('connectionString', connectionString);
-    mongoClient.connect(connectionString);
-  }
+  constructor(
+    @InjectModel(User.name) private readonly userModel: Model<User>,
+  ) {}
 
   async getUser(): Promise<any> {
-    const users = await User.find({ name: 'Ned Stark' });
+    const users = await this.userModel.find({ name: 'Ned Stark' });
 
     console.log(users);
 
