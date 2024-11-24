@@ -10,11 +10,19 @@ export class UserService {
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
-  async getUser(): Promise<any> {
-    const users = await this.userModel.find({ name: 'Ned Stark' });
+  async getUser(): Promise<User[]> {
+    const user = await this.userModel.find();
 
-    console.log(users);
+    console.log(user);
 
-    return users;
+    return user;
+  }
+
+  async createUser(user: User): Promise<User> {
+    const newUser = new this.userModel(user);
+
+    await newUser.save();
+
+    return newUser;
   }
 }
